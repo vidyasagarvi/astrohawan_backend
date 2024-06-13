@@ -2,22 +2,18 @@ pipeline {
     agent any
 
     environment {
-        nodeJSVersion = 'NodeJS' // Name of the NodeJS installation in Jenkins
+        nodeJSVersion = 'NodeJS on 13.127.195.163' // Name of the NodeJS installation in Jenkins
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git credentialsId: 'Github-vidyasagar', url: 'https://github.com/vidyasagarvi/puja-store-backend.git'
+                git branch: 'main', url: 'https://github.com/vidyasagarvi/puja-store-backend.git', credentialsId: 'Github-vidyasagar'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                script {
-                    def nodejs = tool name: nodeJSVersion, type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
-                    env.PATH = "${nodejs}/bin:${env.PATH}"
-                }
                 sh 'npm install'
             }
         }
