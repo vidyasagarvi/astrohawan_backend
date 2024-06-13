@@ -2,19 +2,22 @@ pipeline {
     agent any
 
     environment {
-        NODEJS_HOME = tool name: 'NodeJS 20', type: 'NodeJS'
-        PATH = "${NODEJS_HOME}/bin:${env.PATH}"
+        nodeJSVersion = 'NodeJS' // Name of the NodeJS installation in Jenkins
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/vidyasagarvi/puja-store-backend.git'
+                git credentialsId: 'Github-vidyasagar', url: 'https://github.com/vidyasagarvi/puja-store-backend.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
+                script {
+                    def nodejs = tool name: nodeJSVersion, type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+                    env.PATH = "${nodejs}/bin:${env.PATH}"
+                }
                 sh 'npm install'
             }
         }
@@ -27,7 +30,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sshagent(['your-ssh-credentials-id']) {
+                sshagent(['SHA256:P5s6zBq20NNYo1jTsmsWL2mx5wv5rFMltlWl7dFJjes']) {
                     sh '''
                     ssh -o StrictHostKeyChecking=no ec2-user@13.127.195.163 << EOF
                     cd /home/ec2-user/app
