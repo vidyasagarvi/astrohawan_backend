@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/vidyasagarvi/puja-store-backend.git', credentialsId: 'Github-vidyasagar'
+                git branch: 'main', url: 'https://github.com/vidyasagarvi/puja-store-backend.git', credentialsId: 'Github-vidyasagar-PAT'
             }
         }
 
