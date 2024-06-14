@@ -4,7 +4,8 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "build": "webpack"
   },
   "author": "vidya sagar",
   "license": "ISC",
@@ -21,7 +22,10 @@
     "@babel/cli": "^7.24.7",
     "@babel/core": "^7.24.7",
     "@babel/node": "^7.24.7",
-    "@babel/preset-env": "^7.24.7"
+    "@babel/preset-env": "^7.24.7",
+    "babel-loader": "^9.1.3",
+    "webpack": "^5.92.0",
+    "webpack-cli": "^5.1.4"
   },
   "keywords": [],
   "description": ""
