@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import productRoutes from './routes/pujastoreRoutes.js';
+import productRoutes from './routes/PujastoreRoutes.js';
 import bhandaraRoutes from './routes/BhandaraRoutes.js'
 
 const app = express();
