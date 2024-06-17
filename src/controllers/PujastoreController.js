@@ -34,6 +34,7 @@ class PujastoreController {
         const productData = JSON.parse(req.body.productData);
        
         productData.images = imageName;
+
         const product = await PujaStoreService.addpujaStoreProduct(productData);
         res.status(201).json(product);
       } catch (error) {

@@ -1,8 +1,10 @@
 class PujaStoreProduct {
-    constructor(id, images, price, translations) {
+    constructor(id, images, price,categoryId, translations) {
         this._id = id;
         this._images = images || [];
         this._price = price || 0;
+        this._categoryId = categoryId;
+
         this._translations = translations || [];
     }
 
@@ -18,6 +20,10 @@ class PujaStoreProduct {
     get price() {
         return this._price;
     }
+
+    get categoryId() {
+        return this._categoryId;
+      }
 
     get translations() {
         return this._translations;
@@ -35,6 +41,10 @@ class PujaStoreProduct {
     set price(price) {
         this._price = price;
     }
+
+    set categoryId(categoryId) {
+        this._categoryId = categoryId;
+      }
 
     set translations(translations) {
         this._translations = translations;

@@ -3,6 +3,8 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import productRoutes from './routes/PujastoreRoutes.js';
 import bhandaraRoutes from './routes/BhandaraRoutes.js'
+import categoryRoutes from './routes/categoryRoutes.js';
+
 
 const app = express();
 
@@ -13,6 +15,7 @@ app.use(bodyParser.json());
 // Use the product routes
 app.use('/api/pujastore', productRoutes);
 app.use('/api/bhandara', bhandaraRoutes);
+app.use('/api/categories', categoryRoutes);
 
 //send images middle ware
 app.use(express.static('/'));

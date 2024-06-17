@@ -1,14 +1,21 @@
 import { v4 as uuidv4 } from 'uuid';
 import connection from '../db/Connection.js';
 import PujaStoreProduct from '../models/PujaStoreProduct.js';
+import Category from '../models/Category.js';
+
 
 class PujaStoreService {
   addpujaStoreProduct(productData) {
+
     const productId = uuidv4();
 
-    const product = new PujaStoreProduct(productId, productData.images, productData.price, productData.translations);
 
-    const productQuery = 'INSERT INTO pujastore (id, images, price) VALUES (?, ?, ?)';
+
+    const product = new PujaStoreProduct(productId, productData.images, productData.price, productData.categoryId, productData.translations);
+
+    console.log('on the service',product);
+
+    const productQuery = 'INSERT INTO pujastore (id, images, price,category_id) VALUES (?, ?, ?, ?)';
     const translationQuery = 'INSERT INTO pujastore_translations (pujastore_id, language_code, title, description) VALUES (?, ?, ?, ?)';
 
     return new Promise((resolve, reject) => {
@@ -17,7 +24,7 @@ class PujaStoreService {
 
         connection.query(
           productQuery,
-          [product.id, JSON.stringify(product.images), product.price],
+          [product.id, JSON.stringify(product.images), product.price,product.categoryId],
           (err) => {
             if (err) {
               return connection.rollback(() => reject(err));
@@ -55,22 +62,43 @@ class PujaStoreService {
   }
 
   getAllpujaStoreProduct(languageCode) {
+    console.log(languageCode);
+
     const query = `
-      SELECT p.id, pt.title, pt.description, p.images, p.price
+      SELECT c.id AS category_id, ct.name AS category_name, p.id, pt.title, pt.description, p.images, p.price
       FROM pujastore p
       JOIN pujastore_translations pt ON p.id = pt.pujastore_id
-      WHERE pt.language_code = ?
+      JOIN categories c ON p.category_id = c.id
+      JOIN category_translations ct ON c.id = ct.category_id
+      WHERE pt.language_code = ? AND ct.language_code = ?
+      ORDER BY c.id, p.id
     `;
 
     return new Promise((resolve, reject) => {
-      connection.query(query, [languageCode], (err, results) => {
+      connection.query(query, [languageCode, languageCode], (err, results) => {
         if (err) return reject(err);
-        const products = results.map(row => new PujaStoreProduct(row.id, JSON.parse(row.images), row.price, [{
-          language_code: languageCode,
-          title: row.title,
-          description: row.description
-        }]));
-        resolve(products);
+
+        // Group products by category
+        const categories = {};
+        results.forEach(row => {
+          if (!categories[row.category_id]) {
+            categories[row.category_id] = new Category(row.category_id, [{
+              language_code: languageCode,
+              name: row.category_name
+            }], []);
+          }
+          const product = new PujaStoreProduct(row.id, JSON.parse(row.images), row.price, [{
+            language_code: languageCode,
+            title: row.title,
+            description: row.description
+          }]);
+          categories[row.category_id].products.push(product);
+        });
+
+        // Convert categories object to an array
+        const groupedProducts = Object.values(categories);
+
+        resolve(groupedProducts);
       });
     });
   }
