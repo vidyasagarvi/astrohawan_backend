@@ -4,6 +4,9 @@ import bodyParser from 'body-parser';
 import productRoutes from './routes/PujastoreRoutes.js';
 import bhandaraRoutes from './routes/BhandaraRoutes.js'
 import categoryRoutes from './routes/categoryRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import adminRoutes from './routes/admin/adminRoutes.js'
+
 
 
 const app = express();
@@ -16,6 +19,8 @@ app.use(bodyParser.json());
 app.use('/api/pujastore', productRoutes);
 app.use('/api/bhandara', bhandaraRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/admin', adminRoutes);
 
 //send images middle ware
 app.use(express.static('/'));
