@@ -18,9 +18,6 @@ class Category {
       }
 
     addTranslation(languageCode, name, description) {
-
-        console.log(name,description);
-
         this._translations.push({ language_code: languageCode, name: name , description: description});
     }
 

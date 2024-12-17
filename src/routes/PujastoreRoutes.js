@@ -4,10 +4,9 @@ import PujastoreController from '../controllers/PujastoreController.js';
 const router = express.Router();
 
 router.post('/', PujastoreController.addpujaStoreProduct);
+router.get('/admin/store', PujastoreController.getAllpujaStoreProducts);
 router.get('/', PujastoreController.getAllpujaStoreProduct);
 router.get('/:id', PujastoreController.getpujaStoreProductById);
 router.delete('/:id', PujastoreController.deletepujaStoreProduct);
 
-
 export default router;
-

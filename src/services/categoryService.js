@@ -58,6 +58,37 @@ class CategoryService {
             });
         });
     }
+
+
+    getAllCategories(languageCode) {
+        const query = `
+            SELECT c.id, ct.language_code, ct.name, ct.description
+            FROM categories c
+            JOIN category_translations ct ON c.id = ct.category_id
+            WHERE ct.language_code = ?
+        `;
+
+        return new Promise((resolve, reject) => {
+            connection.query(query, [languageCode], (err, results) => {
+                if (err) return reject(err);
+
+                const categoriesMap = new Map();
+
+                results.forEach(row => {
+                    if (!categoriesMap.has(row.id)) {
+                        categoriesMap.set(row.id, new Category(row.id));
+                    }
+                    const category = categoriesMap.get(row.id);
+                    category.addTranslation(row.language_code, row.name, row.description);
+                });
+
+                const categories = Array.from(categoriesMap.values());
+                resolve(categories);
+            });
+        });
+    }
+
+
 }
 
 export default new CategoryService();
