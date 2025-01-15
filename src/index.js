@@ -15,7 +15,10 @@ import PaymentRoutes from './routes/payment/Payment.js'
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: ['https://www.thesatim.com', 'https://thesatim.com','http://97.74.89.249'], // Frontend URLs
+  methods: ['GET', 'POST'],
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -32,6 +35,7 @@ app.use('/api/services', ourServiceRoutes);
 app.use('/api/contactus',  QueriesRoutes);
 app.use('/api/settings',  SettingRoutes);
 app.use('/api/payment',  PaymentRoutes);
+app.use('/api/webhook',  PaymentRoutes);
 
 //send images middle ware
 app.use(express.static('/'));
@@ -42,7 +46,7 @@ app.use('/ourservices', express.static('storeimages/ourservices'));
 app.use('/helpsneedy', express.static('storeimages/helpsneedy'));
 app.use('/helpsproduct', express.static('storeimages/helpsproduct'));
 app.use('/servicesproduct', express.static('storeimages/servicesproduct'));
-
+app.use('/mahakumbh', express.static('storeimages/mahakumbh'));
 
 // Start the server
 const PORT = process.env.PORT || 3000;

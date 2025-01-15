@@ -4,8 +4,8 @@ import connection from '../../db/Connection.js';
 import { Console } from 'console';
 
 const razorpay = new Razorpay({
-  key_id: 'rzp_test_0O2ft9Vbycev5U', // Replace with your Razorpay Key ID
-  key_secret: 'wdy5yO8Xi77Mtdkm6R2G8Foc', // Replace with your Razorpay Key Secret
+  key_id: 'rzp_live_NeyDxswRdM95cX', // Replace with your Razorpay Key ID
+  key_secret: 'XcIJKeEKpku673SaY0FCoEEI', // Replace with your Razorpay Key Secret
 });
 
 class PaymentService {
@@ -49,7 +49,6 @@ class PaymentService {
 
   // 2. Save Payment Details in Database
   async createOrder(orderDetails) {
-
     const { payment_data, user_data, cart_data, GST, SHIPPING, TotalPrice } = orderDetails;
 
     const custome_orderID = Math.floor(10000000 + Math.random() * 90000000);
@@ -57,11 +56,11 @@ class PaymentService {
       return new Promise((resolve, reject) => {
         connection.query(
           `INSERT INTO store_orders 
-           (id, order_id, payment_id, razorpay_signature, user_id, parent_id, parent_name, gst_charge, shipping_charge, total_ammount, user_name, user_email, user_phone, pin_code, shipping_address, order_status, order_message) 
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+           (id, order_id, payment_id, razorpay_signature, user_id, parent_id, parent_name, gst_charge, shipping_charge, total_ammount,currency,payment_method,card_id, user_name, user_email, user_phone, pin_code, shipping_address, order_status, order_message) 
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)`,
           [
             custome_orderID, payment_data.id, '', '', user_data.userID, cart_data[0].parentId, cart_data[0].type,
-            GST, SHIPPING, TotalPrice, user_data.name, user_data.email, user_data.mobile,
+            GST, SHIPPING, TotalPrice,'','','',user_data.name, user_data.email, user_data.mobile,
             user_data.pincode, user_data.shipping_address, 'pending', ''
           ],
           (err, results) => {
@@ -108,7 +107,7 @@ class PaymentService {
     return new Promise((resolve, reject) => {
           connection.query(
             'UPDATE store_orders SET payment_id= ?, razorpay_signature=?, order_status = ? WHERE order_id = ?',
-            [paymentDetails.razorpay_payment_id, paymentDetails.razorpay_signature,'accepted',paymentDetails.razorpay_order_id ],
+            [paymentDetails.razorpay_payment_id, paymentDetails.razorpay_signature,'accepted',paymentDetails.razorpay_order_id],
             (err) => {
               if (err) return reject(err);
               resolve(paymentDetails.razorpay_order_id);
@@ -185,7 +184,7 @@ class PaymentService {
     return new Promise((resolve, reject) => {
       // Query to fetch order details from `store_orders`
       connection.query(
-        'SELECT * FROM store_orders WHERE id = ?',
+        'SELECT * FROM store_orders WHERE order_id = ?',
         [orderId],
         (err, orderResult) => {
           if (err) {
@@ -225,12 +224,6 @@ class PaymentService {
   }
   
   
-
-  
-
-  
-  
-
   // 5. Get All Payments
   async getAllPayments() {
     try {
@@ -240,6 +233,24 @@ class PaymentService {
       throw new Error('Failed to fetch all payments: ' + error.message);
     }
   }
+
+  async webhookConfirm(webhookDetails) {
+
+
+    return new Promise((resolve, reject) => {
+      const currentTimestamp = new Date();
+          connection.query(
+            'UPDATE store_orders SET currency= ?, payment_method=?, card_id = ?, order_status=?, payment_confirm_date=? WHERE order_id = ?',
+            [webhookDetails.payload.payment.entity.currency, webhookDetails.payload.payment.entity.method,webhookDetails.payload.payment.entity.card_id,webhookDetails.payload.payment.entity.status,currentTimestamp, webhookDetails.payload.payment.entity.order_id],
+            (err) => {
+              if (err) return reject(err);
+              resolve(webhookDetails.payload.payment.entity.order_id);
+            }
+          );
+    });
+  }
+
+
 }
 
 export default new PaymentService();

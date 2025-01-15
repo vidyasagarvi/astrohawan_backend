@@ -7,6 +7,7 @@ router.post('/create', Payment.createPayment);
 router.post('/verify', Payment.verifyPaymentSignature);
 router.post('/create-order', Payment.createOrder);
 router.post('/send-order', Payment.sendOrder);
+router.post('/webhook', Payment.webhookConfirm);
 router.get('/getuser-order/:id/:page', Payment.getOrdersByUserId);
 router.get('/getorder-id/:id/', Payment.getOrderByOrderId);
 

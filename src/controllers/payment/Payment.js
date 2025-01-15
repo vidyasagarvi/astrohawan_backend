@@ -52,7 +52,7 @@ class Payment {
           message: 'Order send successfully', 
           order // Returning the created order
       });
-
+     
        const Orders =  await PaymentService.getOrderByOrderId(order);
        const mailResponse =  await SendOrderMail.SendorderMail(Orders);
       } catch (error) {
@@ -69,7 +69,7 @@ class Payment {
   async getOrdersByUserId(req, res) {
     const { id } = req.params;
     const { page } = req.params;
-    const itemsPerPage = 2; // Example: 5 orders per page
+    const itemsPerPage = 10; // Example: 5 orders per page
     try {
         const product = await PaymentService.getOrdersByUserId(id, page, itemsPerPage);
         if (!product) {
@@ -95,6 +95,16 @@ async getOrderByOrderId(req, res) {
   } catch (error) {
       console.error('Error fetching product:', error);
       res.status(500).json({ message: 'Error fetching Order', error });
+  }
+}
+
+
+async webhookConfirm(req, res) {
+  try {
+    const order = await PaymentService.webhookConfirm(req.body);
+    res.status(200).json({ status: 'success', message : 'payment successful', order });
+  } catch (error) {
+    res.status(500).json({status: 'failed', message: 'Error payment in', error });
   }
 }
 

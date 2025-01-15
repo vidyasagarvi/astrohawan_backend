@@ -53,7 +53,7 @@ class ServicesProductService {
     async getAllServicesProducts(languageCode) {
         return new Promise((resolve, reject) => {
             const query = `
-                SELECT m.id, m.images, m.price, mt.language_code, mt.title, mt.description
+                SELECT m.id, m.images, m.price,m.price_description, mt.language_code, mt.title, mt.description
                 FROM services_products m
                 JOIN services_products_translations mt ON m.id = mt.services_id
                 WHERE mt.language_code = ?

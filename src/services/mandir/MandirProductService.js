@@ -54,7 +54,7 @@ class MandirProductService {
     async getAllMandirProducts(languageCode) {
         return new Promise((resolve, reject) => {
             const query = `
-                SELECT m.id, m.images, m.price, mt.language_code, mt.title, mt.description
+                SELECT m.id, m.images, m.price,m.price_description, mt.language_code, mt.title, mt.description
                 FROM mandir_products m
                 JOIN mandir_products_translations mt ON m.id = mt.product_id
                 WHERE mt.language_code = ?

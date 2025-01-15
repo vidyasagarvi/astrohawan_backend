@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 20, 2024 at 03:19 AM
+-- Generation Time: Dec 31, 2024 at 11:53 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -477,6 +477,7 @@ CREATE TABLE `mandir_products` (
   `id` char(36) NOT NULL,
   `images` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`images`)),
   `price` decimal(10,2) NOT NULL,
+  `price_description` varchar(150) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `status` int(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -485,17 +486,17 @@ CREATE TABLE `mandir_products` (
 -- Dumping data for table `mandir_products`
 --
 
-INSERT INTO `mandir_products` (`id`, `images`, `price`, `created_at`, `status`) VALUES
-('3207aec6-5be0-4f00-89c4-b0f2414a1161', '[\"mandirproduct/1729352572950.jpg\"]', 100.00, '2024-10-19 15:42:52', 1),
-('4b3dfd96-b149-419f-a1e0-1d46d74294d6', '[\"mandirproduct/1729351832139.jpeg\"]', 100.00, '2024-10-19 15:30:32', 1),
-('55c6313a-9c9e-4a70-80e5-f9939382cd17', '[\"mandirproduct/1729353998069.jpg\"]', 100.00, '2024-10-19 16:06:38', 1),
-('5c652b69-ef32-447f-bfa9-3718dc028722', '[\"mandirproduct/1729353044270.jpg\"]', 100.00, '2024-10-19 15:50:44', 1),
-('60976769-23e9-431d-aa10-dda42229c2b0', '[\"mandirproduct/1729342835850.jpg\"]', 100.00, '2024-10-19 13:00:35', 1),
-('79dc2fc4-8145-4faf-a6f8-5c0e10d86f07', '[\"mandirproduct/1729354265607.jpg\"]', 100.00, '2024-10-19 16:11:05', 1),
-('7acdc208-4366-4867-b86c-670e6a4016ec', '[\"mandirproduct/1729342525190.webp\"]', 100.00, '2024-10-19 12:55:25', 1),
-('82c5d433-3d34-4b00-a5d4-7b65c0ab7e14', '[\"mandirproduct/1729354711774.jpeg\"]', 100.00, '2024-10-19 16:18:31', 1),
-('9aa1583e-c557-4615-bfdb-d0b7b1d1b0f3', '[\"mandirproduct/1729354479814.jpg\"]', 100.00, '2024-10-19 16:14:39', 1),
-('dba72c31-6dcd-4e3f-b266-c1516550c9a2', '[\"mandirproduct/1729342651564.webp\"]', 100.00, '2024-10-19 12:57:31', 1);
+INSERT INTO `mandir_products` (`id`, `images`, `price`, `price_description`, `created_at`, `status`) VALUES
+('3207aec6-5be0-4f00-89c4-b0f2414a1161', '[\"mandirproduct/1729352572950.jpg\"]', 150.00, '', '2024-10-19 15:42:52', 1),
+('4b3dfd96-b149-419f-a1e0-1d46d74294d6', '[\"mandirproduct/1729351832139.jpeg\"]', 250.00, 'for 4 people', '2024-10-19 15:30:32', 1),
+('55c6313a-9c9e-4a70-80e5-f9939382cd17', '[\"mandirproduct/1729353998069.jpg\"]', 45.00, 'per person', '2024-10-19 16:06:38', 1),
+('5c652b69-ef32-447f-bfa9-3718dc028722', '[\"mandirproduct/1729353044270.jpg\"]', 10.00, 'per person', '2024-10-19 15:50:44', 1),
+('60976769-23e9-431d-aa10-dda42229c2b0', '[\"mandirproduct/1729342835850.jpg\"]', 10.00, 'per person', '2024-10-19 13:00:35', 1),
+('79dc2fc4-8145-4faf-a6f8-5c0e10d86f07', '[\"mandirproduct/1729354265607.jpg\"]', 35.00, 'per person', '2024-10-19 16:11:05', 1),
+('7acdc208-4366-4867-b86c-670e6a4016ec', '[\"mandirproduct/1729342525190.webp\"]', 10.00, 'per person', '2024-10-19 12:55:25', 1),
+('82c5d433-3d34-4b00-a5d4-7b65c0ab7e14', '[\"mandirproduct/1729354711774.jpeg\"]', 15.00, 'per person', '2024-10-19 16:18:31', 1),
+('9aa1583e-c557-4615-bfdb-d0b7b1d1b0f3', '[\"mandirproduct/1729354479814.jpg\"]', 200.00, 'for 4 person', '2024-10-19 16:14:39', 1),
+('dba72c31-6dcd-4e3f-b266-c1516550c9a2', '[\"mandirproduct/1729342651564.webp\"]', 20.00, 'per person', '2024-10-19 12:57:31', 1);
 
 -- --------------------------------------------------------
 
@@ -583,6 +584,29 @@ INSERT INTO `mandir_translations` (`id`, `mandir_id`, `language_code`, `name`, `
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `order_details`
+--
+
+CREATE TABLE `order_details` (
+  `id` char(36) NOT NULL,
+  `product_id` char(36) NOT NULL,
+  `parent_id` char(36) NOT NULL,
+  `product_title` varchar(200) NOT NULL,
+  `quantity` int(5) NOT NULL,
+  `price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_details`
+--
+
+INSERT INTO `order_details` (`id`, `product_id`, `parent_id`, `product_title`, `quantity`, `price`) VALUES
+('51691789', '3207aec6-5be0-4f00-89c4-b0f2414a1161', '2ee6b602-cd16-4d38-8270-7527647d95ca', 'Feed jaggery to cow for wealth growth', 1, 150.00),
+('51691789', '4b3dfd96-b149-419f-a1e0-1d46d74294d6', '2ee6b602-cd16-4d38-8270-7527647d95ca', 'Donate modak for sweetness in relationships', 1, 250.00);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `otps`
 --
 
@@ -599,7 +623,7 @@ CREATE TABLE `otps` (
 --
 
 INSERT INTO `otps` (`id`, `user_id`, `otp_code`, `created_at`, `expires_at`) VALUES
-('c56926e8-353a-456e-ab60-85258db420aa', 'e6c61d7b-1790-4927-b36f-a9f36b4be052', '28932', '2024-11-18 14:45:09', '2024-11-18 14:55:09');
+('be098eb4-0673-4035-985b-f944e7a21fb8', '8f9ebc31-3ac6-489f-9c2a-11a35470ef8f', '29644', '2024-12-09 08:00:25', '2024-12-09 08:10:25');
 
 -- --------------------------------------------------------
 
@@ -645,8 +669,8 @@ CREATE TABLE `pujastore` (
 --
 
 INSERT INTO `pujastore` (`id`, `images`, `price`, `discount`, `category_id`, `status`, `created_at`) VALUES
-('493e1fc2-7f52-4b42-9cd9-d9a92d4e934e', '[\"pujastore/1731170701242.jpg\"]', 100.00, 10.00, '2d90117a-295c-496c-977c-4097adff3604', 1, '2024-11-09 16:45:01'),
-('753aae0f-2578-4b9f-aefd-881f97efcf94', '[\"pujastore/1731172883543.jpeg\"]', 100.00, 0.00, '2d90117a-295c-496c-977c-4097adff3604', 1, '2024-11-09 17:21:23'),
+('493e1fc2-7f52-4b42-9cd9-d9a92d4e934e', '[\"pujastore/1731170701242.jpg\"]', 150.00, 0.00, '2d90117a-295c-496c-977c-4097adff3604', 1, '2024-11-09 16:45:01'),
+('753aae0f-2578-4b9f-aefd-881f97efcf94', '[\"pujastore/1731172883543.jpeg\"]', 1100.00, 0.00, '2d90117a-295c-496c-977c-4097adff3604', 1, '2024-11-09 17:21:23'),
 ('9301ac12-a00d-4a75-886f-76666fa2533a', '[\"pujastore/1731171178618.jpeg\"]', 100.00, 0.00, '2d90117a-295c-496c-977c-4097adff3604', 1, '2024-11-09 16:52:58'),
 ('d34c8d9a-362e-4d4a-bc6e-ca11a1f0a89c', '[\"pujastore/1731171895478.jpeg\"]', 100.00, 0.00, '2d90117a-295c-496c-977c-4097adff3604', 1, '2024-11-09 17:04:55');
 
@@ -712,6 +736,7 @@ CREATE TABLE `services_products` (
   `id` char(36) NOT NULL,
   `images` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`images`)),
   `price` decimal(10,2) NOT NULL,
+  `price_description` varchar(200) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `status` int(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -720,17 +745,17 @@ CREATE TABLE `services_products` (
 -- Dumping data for table `services_products`
 --
 
-INSERT INTO `services_products` (`id`, `images`, `price`, `created_at`, `status`) VALUES
-('05b5f904-8ffc-49d2-a1fd-ed73a6bf7d34', '[\"servicesproduct/1729430484788.png\"]', 50.00, '2024-10-20 13:21:24', 1),
-('13d3b50a-fe46-4efe-ab86-e2817cf19625', '[\"servicesproduct/1729430577329.png\"]', 50.00, '2024-10-20 13:22:57', 1),
-('28ecdf1d-daf8-4550-b160-514b81d60d02', '[\"servicesproduct/1729429865589.png\"]', 50.00, '2024-10-20 13:11:05', 1),
-('2a5e95e3-c4e7-4b32-a309-e3d8eeec78e4', '[\"servicesproduct/1729429591568.png\"]', 50.00, '2024-10-20 13:06:31', 1),
-('2d987c30-df72-42e6-87c2-2d3dbb797615', '[\"servicesproduct/1729430094169.png\"]', 50.00, '2024-10-20 13:14:54', 1),
-('33f77117-01ca-43b3-a4ec-1962a247dedf', '[\"servicesproduct/1729428544967.png\"]', 10.00, '2024-10-20 12:49:04', 1),
-('34a4a825-3006-47c4-af02-db854fa9dc3c', '[\"servicesproduct/1729428776041.png\"]', 50.00, '2024-10-20 12:52:56', 1),
-('7ddf9fa4-e2af-4d7f-b4c0-977c403a566a', '[\"servicesproduct/1729429385057.png\"]', 50.00, '2024-10-20 13:03:05', 1),
-('8c2732cf-b0f6-4766-bad9-70db811d2e30', '[\"servicesproduct/1729429312342.png\"]', 50.00, '2024-10-20 13:01:52', 1),
-('cb8d5f0b-d0c9-455b-95ba-92ef0b9efd8f', '[\"servicesproduct/1729429488333.png\"]', 50.00, '2024-10-20 13:04:48', 1);
+INSERT INTO `services_products` (`id`, `images`, `price`, `price_description`, `created_at`, `status`) VALUES
+('05b5f904-8ffc-49d2-a1fd-ed73a6bf7d34', '[\"servicesproduct/1729430484788.png\"]', 10.00, 'per person', '2024-10-20 13:21:24', 1),
+('13d3b50a-fe46-4efe-ab86-e2817cf19625', '[\"servicesproduct/1729430577329.png\"]', 50.00, 'per plate', '2024-10-20 13:22:57', 1),
+('28ecdf1d-daf8-4550-b160-514b81d60d02', '[\"servicesproduct/1729429865589.png\"]', 35.00, 'per person', '2024-10-20 13:11:05', 1),
+('2a5e95e3-c4e7-4b32-a309-e3d8eeec78e4', '[\"servicesproduct/1729429591568.png\"]', 100.00, '', '2024-10-20 13:06:31', 1),
+('2d987c30-df72-42e6-87c2-2d3dbb797615', '[\"servicesproduct/1729430094169.png\"]', 45.00, 'per person', '2024-10-20 13:14:54', 1),
+('33f77117-01ca-43b3-a4ec-1962a247dedf', '[\"servicesproduct/1729428544967.png\"]', 10.00, 'per person', '2024-10-20 12:49:04', 1),
+('34a4a825-3006-47c4-af02-db854fa9dc3c', '[\"servicesproduct/1729428776041.png\"]', 10.00, 'per person', '2024-10-20 12:52:56', 1),
+('7ddf9fa4-e2af-4d7f-b4c0-977c403a566a', '[\"servicesproduct/1729429385057.png\"]', 50.00, 'per person (One box contains 4 pieces)', '2024-10-20 13:03:05', 1),
+('8c2732cf-b0f6-4766-bad9-70db811d2e30', '[\"servicesproduct/1729429312342.png\"]', 20.00, 'per person', '2024-10-20 13:01:52', 1),
+('cb8d5f0b-d0c9-455b-95ba-92ef0b9efd8f', '[\"servicesproduct/1729429488333.png\"]', 200.00, 'for 4 person', '2024-10-20 13:04:48', 1);
 
 -- --------------------------------------------------------
 
@@ -922,10 +947,48 @@ INSERT INTO `service_translations` (`id`, `service_id`, `language_code`, `title`
 ('b91b6456-8edc-11ef-a37a-acbc329ab9e7', 'e9748ee1-6b00-48cc-9801-19432386dd10', 'hi', 'व्यापार वृद्धि के लिए भंडारा करवायें', '<p><strong>ब्यापार में बृद्धि के लिए भंडार करवाना चाहिए|  </strong>धन की देवी लक्ष्मी दरिद्रता दूर करने वाली हैं। यहां सूर्य देव स्वयं माता की पूजा करते हैं। एक बार माता लक्ष्मी भगवान तिरुपति से नाराज होकर अपना घर छोड़कर शांति की तलाश में यहां रहने आ गईं। तब से लेकर जो भी भक्त प्रसाद वितरड़ करवाता  उसके व्यापर में वृद्धि होती है</p>'),
 ('e754e6f2-8edd-11ef-a37a-acbc329ab9e7', '5dcbbb3d-a8f1-43c7-af79-f2f7307a2c03', 'en', 'To appease Kaal Sarp Dosh, offer Prasad to the needy.', '<p><strong>For Eliminating the Fear of Death and Achieving Mental Stability</strong>. Nazar, or the attraction of negative energy, can happen to anyone at any time. It is not always intentional, but it can have a significant adverse effect on your life. Fortunately, there are many ways in our Vedas to remove any effects of Nazar Dosh and keep you safe for a happy and blessed life. You can get rid of Nazar Dosh by doing Prasad distribution or Bhandara by us.</p>'),
 ('e7552ae0-8edd-11ef-a37a-acbc329ab9e7', '5dcbbb3d-a8f1-43c7-af79-f2f7307a2c03', 'hi', 'काल सर्प दोष शांति के लिए जरुरत मंदों को प्रसाद भेंट करवाएं', '<p><strong>मृत्यु के भय को दूर करने और मानसिक स्थिरता प्राप्त करने के लिए</strong> नज़र, या नकारात्मक ऊर्जा का आकर्षण किसी को भी कभी भी हो सकता है। यह हमेशा जानबूझकर नहीं होता है, लेकिन आपके जीवन पर इसका महत्वपूर्ण प्रतिकूल प्रभाव पड़ सकता है। सौभाग्य से, हमारे वेदों में नज़र दोष के किसी भी प्रभाव को दूर करने और आपको एक खुशहाल और धन्य जीवन के लिए सुरक्षित रखने के कई तरीके हैं। हमारे द्वारा आप प्रसाद वितरण या भंडारा करवा के नजर दोष से मुक्ति पा सकते हैं| </p>'),
-('ef8eaa00-8ed9-11ef-a37a-acbc329ab9e7', '943fc86d-2cf7-43e4-9876-f9074beafb3f', 'en', 'Rin Mukti Puja To Get Rid of Debt', '<p>If you want to get rid of debt, then you can go to the ancient Rinmukteshwar Mahadev temple in Ujjain. Here a very wonderful and beneficial puja is performed to get rid of all debts. Yellow items are offered to Mahadev in this puja. According to history, in the Satyug period, King Harishchandra himself performed this ritual to get rid of his debt. With this devotion, a person is not only freed from financial responsibilities, but also from the debts of past births, ancestors, gurus and gods.  </p> <p>Rin Mukti Puja is especially beneficial for freedom from debt, obstacles in love marriage and freedom from the defects of the birth horoscope, getting it done promises a happy married life. If you also want freedom from all your debts and want to get immense wealth, then definitely join the Rin Mukti Prasad distribution organized by SATIM in Rinmukteshwar Mahadev Temple.</p>'),
+('ef8eaa00-8ed9-11ef-a37a-acbc329ab9e7', '943fc86d-2cf7-43e4-9876-f9074beafb3f', 'en', 'Rin mukti ke liye prasad vitrit karwayen', '<p>If you want to get rid of debt, then you can go to the ancient Rinmukteshwar Mahadev temple in Ujjain. Here a very wonderful and beneficial puja is performed to get rid of all debts. Yellow items are offered to Mahadev in this puja. According to history, in the Satyug period, King Harishchandra himself performed this ritual to get rid of his debt. With this devotion, a person is not only freed from financial responsibilities, but also from the debts of past births, ancestors, gurus and gods.  </p> <p>Rin Mukti Puja is especially beneficial for freedom from debt, obstacles in love marriage and freedom from the defects of the birth horoscope, getting it done promises a happy married life. If you also want freedom from all your debts and want to get immense wealth, then definitely join the Rin Mukti Prasad distribution organized by SATIM in Rinmukteshwar Mahadev Temple.</p>'),
 ('ef8f1ecc-8ed9-11ef-a37a-acbc329ab9e7', '943fc86d-2cf7-43e4-9876-f9074beafb3f', 'hi', 'ऋण मुक्ति पूजा कर्ज से छुटकारा पाने के लिए', '<p>अगर आप कर्ज से मुक्ति पाना चाहते हैं तो आप उज्जैन के प्राचीन ऋणमुक्तेश्वर महादेव मंदिर में जा सकते हैं। यहां सभी कर्जों से मुक्ति पाने के लिए बहुत ही अद्भुत और लाभकारी पूजा होती है। इस पूजा में महादेव को पीली वस्तुएं अर्पित की जाती हैं। इतिहास के अनुसार सतयुग काल में राजा हरिश्चंद्र ने स्वयं अपने कर्ज से मुक्ति पाने के लिए यह अनुष्ठान किया था। इस भक्ति से व्यक्ति न केवल आर्थिक जिम्मेदारियों से मुक्त होता है, बल्कि पिछले जन्मों, पूर्वजों, गुरुओं और देवताओं के ऋण से भी मुक्त होता है। </p> <p>कर्ज से मुक्ति, प्रेम विवाह में आने वाली रुकावटों और जन्म कुंडली के दोषों से मुक्ति के लिए ऋण मुक्ति पूजा विशेष लाभकारी है, इसे करवाने से सुखी वैवाहिक जीवन का वादा किया जाता है। अगर आप भी अपने सभी कर्जों से मुक्ति चाहते हैं और अपार धन-संपत्ति पाना चाहते हैं तो ऋणमुक्तेश्वर महादेव मंदिर में सतिं द्वारा  आयोजित ऋण मुक्ति प्रसाद वितरण में जरूर शामिल हों।</p>'),
 ('f6a9a50a-8eda-11ef-a37a-acbc329ab9e7', 'a4f08de4-36cc-4f1f-b425-9a3f867938f6', 'en', 'Get a Bhandara organized for the birth of a child.', '<p><strong>Childbirth and tranquility in fierce temperament.</strong>To get a child, all the devotees try to please God in different ways so that God fulfills their wish. If you organize a Bhandara for getting a child, then your wish is fulfilled soon. Bhandara is a festive occasion in Hinduism which involves community kitchen and is a way of thanking God and serving people. Some things should be kept in mind while organizing a Bhandara for the birth of a child.</p>'),
 ('f6a9ddf4-8eda-11ef-a37a-acbc329ab9e7', 'a4f08de4-36cc-4f1f-b425-9a3f867938f6', 'hi', 'संतान प्राप्ति के लिए भंडारा करवाएं', '<p><strong>उग्र स्वभाव में संतानोत्पत्ति और शांति</strong>. संतान प्राप्ति के लिए सभी भक्त भगवन को अलग अलग तरह से मानाने  कोसिस करते हैं ताकि भगवन उनकी मनोकामना पूर्ण कर दें यदि आप संतान प्राप्ति के लिए भंडारे का आयोजन करते हैं तो आप की मनोकामना शीघ्र पूर्ण होती है भंडारा हिंदू धर्म में एक उत्सव का अवसर है जिसमें सामुदायिक रसोई शामिल होती है और यह भगवान को धन्यवाद देने और लोगों की सेवा करने का एक तरीका है। बच्चे के जन्म के लिए भंडारा आयोजित करते समय कुछ बातों का ध्यान रखना चाहिए </p>');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `store_orders`
+--
+
+CREATE TABLE `store_orders` (
+  `id` char(36) NOT NULL,
+  `order_id` char(36) NOT NULL,
+  `payment_id` char(36) NOT NULL,
+  `razorpay_signature` text NOT NULL,
+  `user_id` char(36) NOT NULL,
+  `parent_id` char(36) NOT NULL,
+  `parent_name` varchar(39) NOT NULL,
+  `gst_charge` decimal(10,2) NOT NULL,
+  `shipping_charge` decimal(10,2) NOT NULL,
+  `total_ammount` decimal(10,2) NOT NULL,
+  `currency` varchar(10) NOT NULL,
+  `payment_method` varchar(10) NOT NULL,
+  `card_id` varchar(200) NOT NULL,
+  `user_name` varchar(100) NOT NULL,
+  `user_email` varchar(100) NOT NULL,
+  `user_phone` varchar(20) NOT NULL,
+  `pin_code` varchar(20) NOT NULL,
+  `shipping_address` text NOT NULL,
+  `order_status` char(15) NOT NULL,
+  `order_message` text NOT NULL,
+  `order_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `payment_confirm_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `store_orders`
+--
+
+INSERT INTO `store_orders` (`id`, `order_id`, `payment_id`, `razorpay_signature`, `user_id`, `parent_id`, `parent_name`, `gst_charge`, `shipping_charge`, `total_ammount`, `currency`, `payment_method`, `card_id`, `user_name`, `user_email`, `user_phone`, `pin_code`, `shipping_address`, `order_status`, `order_message`, `order_date`, `payment_confirm_date`) VALUES
+('51691789', 'order_PdSCELDzZUJTRX', '', '', '8f9ebc31-3ac6-489f-9c2a-11a35470ef8f', '2ee6b602-cd16-4d38-8270-7527647d95ca', 'mandir', 18.00, 10.00, 482.00, '', '', '', 'Vidya sagar Vishwakarma', 'vidyasagar.vi@gmail.com', '09911030958', '110062', 'Gali no 14 house no 361 2nd floor DDA flats madan gir', 'pending', '', '2024-12-30 16:28:47', '2024-12-30 16:28:47');
 
 -- --------------------------------------------------------
 
@@ -978,7 +1041,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `mobile_no`, `email`, `password`, `name`, `shipping_address`, `pincode`, `is_verified`, `created_at`) VALUES
-('e6c61d7b-1790-4927-b36f-a9f36b4be052', '09911030958', 'vidyasagar.vi@gmail.com', '$2b$10$2RRH53yxDde7CT6pLNJO..0v5rSbPQYugk.xi59ImY6t9Q16nzzGm', 'Vidya sagar Vishwakarma', 'Gali no 14 house no 361 2nd floor DDA flats madan gir', '110062', 1, '2024-11-18 14:45:09');
+('8f9ebc31-3ac6-489f-9c2a-11a35470ef8f', '09911030958', 'vidyasagar.vi@gmail.com', '$2b$10$MCWAvIeIeJF4Z/SaKcSZUO80CErJAcrMOBzOmIoQ2G0zz9C1sS2uK', 'Vidya sagar Vishwakarma', 'Gali no 14 house no 361 2nd floor DDA flats madan gir', '110062', 1, '2024-12-09 08:00:25');
 
 --
 -- Indexes for dumped tables
@@ -1077,6 +1140,12 @@ ALTER TABLE `mandir_translations`
   ADD UNIQUE KEY `mandir_id` (`mandir_id`,`language_code`);
 
 --
+-- Indexes for table `order_details`
+--
+ALTER TABLE `order_details`
+  ADD KEY `order_id` (`id`);
+
+--
 -- Indexes for table `otps`
 --
 ALTER TABLE `otps`
@@ -1142,6 +1211,13 @@ ALTER TABLE `service_benefits_translations`
 ALTER TABLE `service_translations`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `service_id` (`service_id`,`language_code`);
+
+--
+-- Indexes for table `store_orders`
+--
+ALTER TABLE `store_orders`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `order_id` (`order_id`);
 
 --
 -- Indexes for table `tbl_settings`
@@ -1224,6 +1300,12 @@ ALTER TABLE `mandir_products_translations`
 --
 ALTER TABLE `mandir_translations`
   ADD CONSTRAINT `mandir_translations_ibfk_1` FOREIGN KEY (`mandir_id`) REFERENCES `mandir` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `order_details`
+--
+ALTER TABLE `order_details`
+  ADD CONSTRAINT `id` FOREIGN KEY (`id`) REFERENCES `store_orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `otps`
